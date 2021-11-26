@@ -6,6 +6,7 @@ import Task from './components/Task';
 import InputBar from './components/InputBar';
 
 export default function App() {
+  const [title, setTitle] = useState('Toodler')
   const [task, setTask] = useState();
   const [taskItems, setTaskItems] = useState([]);
   const [state, setState] = useState('home');
@@ -206,6 +207,11 @@ export default function App() {
     setState("lists");
     setBoardId(index);
   }
+  
+  const enterList = (index) => {
+    setState("tasks");
+    setListId(index);
+  }
 
   const renderItems = (id=0) => {
     if (state=='home'){
@@ -247,15 +253,29 @@ export default function App() {
         {
           listList.map((item, index) => {
             if(item.boardId == boardId){return (
-              <TouchableOpacity key={index} onPress={() => enterBoard(index)}>
-                <Task key={index} text={item.name+' '+item.id}/>
+              <TouchableOpacity key={item.id} onPress={() => enterList(item.id)}>
+                <Task key={item.id} text={item.name+' '+item.id}/>
               </TouchableOpacity>
             )}
           })
         }
       </View>)
     }
-    else {
+    else if (state=='tasks'){
+      console.log('go to list tasks with id: ', listId);
+      return (<View style={styles.items}>
+        {/* This is where the items will go */}
+        {
+          taskList.map((item, index) => {
+            if(item.listId == listId){return (
+              <TouchableOpacity key={item.id} onPress={() => deleteTask(item.id)}>
+                <Task key={item.id} text={item.name+' '+item.id}/>
+              </TouchableOpacity>
+            )}
+          })
+        }
+      </View>)
+    }else{
       console.log("where are you");
     }
   }
